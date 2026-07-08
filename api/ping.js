@@ -46,13 +46,16 @@ export default async function handler(req, res) {
   const TIMEOUT_MS = 10000;
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-  try {
-    console.log('[api/ping] Starting — GET /auth/v1/health');
+  const SUPABASE_QUERY_PATH = '/rest/v1/keepalive?select=id&limit=1';
 
-    const response = await fetch(`${supabaseUrl}/auth/v1/health`, {
+  try {
+    console.log(`[api/ping] Starting — GET ${SUPABASE_QUERY_PATH}`);
+
+    const response = await fetch(`${supabaseUrl}${SUPABASE_QUERY_PATH}`, {
       headers: {
         'Content-Type': 'application/json',
         apikey: supabaseAnonKey,
+        Authorization: `Bearer ${supabaseAnonKey}`,
       },
       signal: controller.signal,
     });
